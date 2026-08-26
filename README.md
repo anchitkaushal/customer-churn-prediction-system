@@ -77,6 +77,21 @@ A leading international bank is experiencing customer attrition across its Europ
 The system is built on modular Python packages, separating data loading, statistical profiling, feature engineering, model training, evaluation, hyperparameter tuning, and web serving.
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "flowchart": {
+    "htmlLabels": false
+  },
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#111827",
+    "primaryBorderColor": "#374151",
+    "lineColor": "#6b7280",
+    "secondaryColor": "#ffffff",
+    "tertiaryColor": "#ffffff"
+  }
+}}%%
+
 flowchart TD
 
     A["Raw Customer Dataset: customer churn.csv (10,000 records)"] --> B["Data Cleaning & Column Standardization"]
@@ -85,8 +100,8 @@ flowchart TD
     subgraph DP["Leakage-Safe Preprocessing Pipeline"]
         C --> D["Median Imputer (Numeric Features)"]
         D --> E["Modal Imputer (Categorical Features)"]
-        E --> F["IQR Outlier Bounds Clipper [Q1-1.5IQR, Q3+1.5IQR]"]
-        F --> G["One-Hot Categorical Encoder (handle_unknown='ignore')"]
+        E --> F["IQR Outlier Bounds Clipper"]
+        F --> G["One-Hot Categorical Encoder"]
         G --> H["StandardScaler (Continuous Features)"]
     end
 
@@ -100,26 +115,26 @@ flowchart TD
     end
 
     subgraph VD["Validation, Persistence & Serving"]
-        M1 --> EVAL["Multi-Metric Evaluation (AUC, F1, Recall, Precision, Accuracy)"]
+        M1 --> EVAL["Multi-Metric Evaluation: AUC, F1, Recall, Precision, Accuracy"]
         M2 --> EVAL
         M3 --> EVAL
         M4 --> EVAL
         M5 --> EVAL
         M6 --> EVAL
 
-        EVAL --> SERVE["Joblib Serialization -> models/*.pkl"]
-        SERVE --> APP["Streamlit Interactive Web Application (app.py)"]
+        EVAL --> SERVE["Joblib Serialization - models/*.pkl"]
+        SERVE --> APP["Streamlit Interactive Web Application - app.py"]
     end
 
-    classDef source fill:#f8fafc,stroke:#334155,stroke-width:2px,color:#0f172a;
-    classDef pipe fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
-    classDef model fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d;
-    classDef deploy fill:#faf5ff,stroke:#9333ea,stroke-width:2px,color:#581c87;
+    classDef source fill:#ffffff,stroke:#334155,stroke-width:2px,color:#111827
+    classDef pipe fill:#ffffff,stroke:#2563eb,stroke-width:2px,color:#111827
+    classDef model fill:#ffffff,stroke:#16a34a,stroke-width:2px,color:#111827
+    classDef deploy fill:#ffffff,stroke:#9333ea,stroke-width:2px,color:#111827
 
-    class A,B,C source;
-    class D,E,F,G,H pipe;
-    class M1,M2,M3,M4,M5,M6 model;
-    class EVAL,SERVE,APP deploy;
+    class A,B,C source
+    class D,E,F,G,H pipe
+    class M1,M2,M3,M4,M5,M6 model
+    class EVAL,SERVE,APP deploy
 ```
 
 ---
