@@ -124,7 +124,7 @@ flowchart TD
         SERVE --> APP[Streamlit Interactive App: app.py]
     end
 
----
+```
 
 ## 🔍 Exploratory Data Analysis & Key Insights
 
