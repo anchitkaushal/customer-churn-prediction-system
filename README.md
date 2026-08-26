@@ -75,11 +75,27 @@ Financial institutions face high customer acquisition costs ($200–$500+ per re
 The codebase is built with strict modularity, separating exploration, feature transformations, evaluation, model persistence, and UI serving:
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#0d1117",
+    "primaryColor": "#21262d",
+    "primaryTextColor": "#ffffff",
+    "primaryBorderColor": "#8b949e",
+    "lineColor": "#8b949e",
+    "secondaryColor": "#161b22",
+    "tertiaryColor": "#161b22",
+    "clusterBkg": "#161b22",
+    "clusterBorder": "#8b949e"
+  }
+}}%%
+
 flowchart TD
+
     A[Raw Data: customer churn.csv] --> B[Data Cleaning & Column Standardization]
     B --> C[Stratified Train / Test Split 80/20]
-    
-    subgraph Data Pipeline
+
+    subgraph DP["Data Pipeline"]
         C --> D[Median Numeric Imputer]
         D --> E[Modal Categorical Imputer]
         E --> F[IQR Outlier Bounds Clipper]
@@ -87,7 +103,7 @@ flowchart TD
         G --> H[Standard / Robust Scaler]
     end
 
-    subgraph Model Arena
+    subgraph MA["Model Arena"]
         H --> M1[Logistic Regression]
         H --> M2[Decision Tree]
         H --> M3[Random Forest]
@@ -96,12 +112,17 @@ flowchart TD
         H --> M6[XGBoost Classifier]
     end
 
-    subgraph Validation & Deployment
-        M1 & M2 & M3 & M4 & M5 & M6 --> EVAL[Multi-Metric Evaluation: AUC, F1, Recall]
+    subgraph VD["Validation & Deployment"]
+        M1 --> EVAL[Multi-Metric Evaluation: AUC, F1, Recall]
+        M2 --> EVAL
+        M3 --> EVAL
+        M4 --> EVAL
+        M5 --> EVAL
+        M6 --> EVAL
+
         EVAL --> SERVE[Trained Artifacts Export .pkl]
         SERVE --> APP[Streamlit Interactive App: app.py]
     end
-```
 
 ---
 
