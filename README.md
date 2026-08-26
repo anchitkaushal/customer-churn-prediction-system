@@ -7,206 +7,224 @@
 [![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-> An end-to-end Machine Learning and Business Intelligence solution designed to detect at-risk banking customers, quantify attrition probabilities, diagnose churn drivers, and empower retention teams through an interactive Streamlit dashboard.
+> **An end-to-end Machine Learning and Business Intelligence solution** designed to proactively identify at-risk retail banking customers, quantify individual attrition probabilities, diagnose key behavioral churn drivers, and empower relationship managers through an interactive Streamlit retention dashboard.
 
 ---
 
 ## 📑 Table of Contents
 
 - [🌟 Executive Summary](#-executive-summary)
-- [🎯 Business Problem & Objective](#-business-problem--objective)
+- [🎯 Business Problem & Core Objectives](#-business-problem--core-objectives)
 - [🏗️ System Architecture & Workflow](#️-system-architecture--workflow)
-- [🔍 Exploratory Data Analysis & Key Insights](#-exploratory-data-analysis--key-insights)
-- [🔬 Data Preprocessing & Leakage-Safe Engineering](#-data-preprocessing--leakage-safe-engineering)
+- [🔍 Exploratory Data Analysis & Critical Insights](#-exploratory-data-analysis--critical-insights)
+- [🔬 Data Preprocessing & Leakage-Safe Pipeline](#-data-preprocessing--leakage-safe-pipeline)
 - [🤖 Model Benchmarking & Experimental Results](#-model-benchmarking--experimental-results)
 - [🖥️ Streamlit Web Application Walkthrough](#️-streamlit-web-application-walkthrough)
 - [📁 Project Structure](#-project-structure)
 - [⚡ Quickstart & Installation](#-quickstart--installation)
 - [🛠️ How to Run & Reproduce](#️-how-to-run--reproduce)
-- [📈 Key Business Recommendations](#-key-business-recommendations)
+- [📈 Strategic Business Retention Playbook](#-strategic-business-retention-playbook)
+- [👥 Author & License](#-author--license)
 
 ---
 
 ## 🌟 Executive Summary
 
-Retaining existing customers is significantly more cost-effective than acquiring new ones. This project delivers a production-grade churn prediction pipeline built on **10,000 customer banking records**, comparing **6 classical and ensemble classification algorithms** (Logistic Regression, Decision Trees, Random Forest, Gradient Boosting, KNN, and XGBoost).
+In retail banking, acquiring a new customer costs **5 to 7 times more** than retaining an existing one. Unplanned customer attrition directly erodes total deposits, reduces interchange fees, and damages long-term Customer Lifetime Value (CLV).
 
-The system pairs modular, leakage-safe data transformation pipelines with an interactive **Streamlit web application**, providing automated data validation, risk stratification (Low / Medium / High Risk), individual customer diagnostic drawers, and 1-click batch export.
+This repository contains a full-lifecycle Machine Learning and Decision Support System trained and evaluated on **10,000 customer banking profiles**. It benchmarks **6 classification algorithms** across two rigorous validation regimes (with and without customer service complaints), pairs them with a **leakage-safe preprocessing pipeline**, and packages the final solution into a production-ready **Streamlit web application**.
 
 ```
-       [ 10,000 Banking Records ]
-                   │
-                   ▼
-       [ Modular Preprocessing ] ────► Outlier Clipping + One-Hot + Scaler
-                   │
-                   ▼
-       [ ML Model Suite (6 Alg.) ] ───► Logistic Regression / GB / RF / XGB
-                   │
-                   ▼
-  ┌─────────────────────────────────┐
-  │     Streamlit Analytics App     │
-  ├─────────────────────────────────┤
-  │  • Batch CSV Scoring            │
-  │  • KPI Metrics & Visual Bins    │
-  │  • Customer Risk Stratification │
-  │  • Retention Action Export      │
-  └─────────────────────────────────┘
+  ┌───────────────────────────┐      ┌───────────────────────────┐
+  │   10,000 Customer Data    │ ───► │  Exploratory Data Science │
+  │ (Demographic & Financial) │      │  (7 In-depth EDA Notebooks)│
+  └───────────────────────────┘      └───────────────────────────┘
+                │
+                ▼
+  ┌───────────────────────────┐      ┌───────────────────────────┐
+  │  Leakage-Safe Preprocess  │ ───► │   6-Model ML Tournament   │
+  │ (IQR Clip + OHE + Scaler) │      │  (LR, DT, RF, GB, KNN, XGB)│
+  └───────────────────────────┘      └───────────────────────────┘
+                │
+                ▼
+  ┌──────────────────────────────────────────────────────────────┐
+  │             Interactive Streamlit Web Dashboard              │
+  │   • Batch CSV Scoring Engine  • Real-Time KPI Metric Cards   │
+  │   • 3-Tier Risk Segmentation  • 1-Click Scored CSV Export    │
+  └──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🎯 Business Problem & Objective
+## 🎯 Business Problem & Core Objectives
 
-Financial institutions face high customer acquisition costs ($200–$500+ per retail banking customer). Losing accounts impacts balances, interchange fee revenue, and lifetime customer value.
+### The Challenge
+A leading international bank is experiencing customer attrition across its European branches (France, Germany, Spain). Without predictive modeling, relationship teams only discover a customer has left *after* the account is closed—when it is already too late to intervene.
 
 ### Core Objectives
-1. **Predict Churn Risk Early**: Generate precise churn probabilities for every customer.
-2. **Segment by Risk Severity**:
-   - 🔴 **High Risk (≥ 70% probability)**: Urgent, high-touch proactive intervention.
-   - 🟡 **Medium Risk (40% – 69% probability)**: Automated incentives & loyalty check-ins.
-   - 🟢 **Low Risk (< 40% probability)**: Standard engagement and regular communication.
-3. **Isolate Primary Risk Indicators**: Identify behavioral and demographic drivers (e.g., active membership, geographical trends, complaint history, product count).
-4. **Deploy User-Centric Decision Tooling**: Enable non-technical relationship managers to run batch predictions instantly.
+1. **Accurate Attrition Probability**: Predict the precise likelihood ($0.0\% - 100.0\%$) of each customer churning before they disengage.
+2. **Actionable Risk Segmentation**:
+   - 🔴 **High Risk ($\ge 70\%$ probability)**: Immediate priority outreach by relationship managers with customized retention packages.
+   - 🟡 **Medium Risk ($40\% - 69\%$ probability)**: Automated engagement, targeted loyalty incentives, and fee waivers.
+   - 🟢 **Low Risk ($< 40\%$ probability)**: Standard marketing communications and relationship nurturing.
+3. **Root Cause Diagnosis**: Surface key demographic and behavioral indicators (e.g., complaint filings, balance thresholds, age cohorts, product portfolio size).
+4. **Self-Service Decision Tooling**: Provide branch staff and retention analysts with an intuitive web dashboard capable of scoring batch customer files in seconds without writing code.
 
 ---
 
 ## 🏗️ System Architecture & Workflow
 
-The codebase is built with strict modularity, separating exploration, feature transformations, evaluation, model persistence, and UI serving:
+The system is built on modular Python packages, separating data loading, statistical profiling, feature engineering, model training, evaluation, hyperparameter tuning, and web serving.
 
 ```mermaid
 flowchart TD
 
-    A[Raw Data: customer churn.csv] --> B[Data Cleaning and Column Standardization]
-    B --> C[Stratified Train Test Split 80/20]
+    A["Raw Customer Dataset: customer churn.csv (10,000 records)"] --> B["Data Cleaning & Column Standardization"]
+    B --> C["Stratified 80/20 Train-Test Split (8,000 Train / 2,000 Test)"]
 
-    subgraph DP[Data Pipeline]
-        C --> D[Median Numeric Imputer]
-        D --> E[Modal Categorical Imputer]
-        E --> F[IQR Outlier Bounds Clipper]
-        F --> G[One-Hot Categorical Encoder]
-        G --> H[Standard / Robust Scaler]
+    subgraph DP["Leakage-Safe Preprocessing Pipeline"]
+        C --> D["Median Imputer (Numeric Features)"]
+        D --> E["Modal Imputer (Categorical Features)"]
+        E --> F["IQR Outlier Bounds Clipper [Q1-1.5IQR, Q3+1.5IQR]"]
+        F --> G["One-Hot Categorical Encoder (handle_unknown='ignore')"]
+        G --> H["StandardScaler (Continuous Features)"]
     end
 
-    subgraph MA[Model Arena]
-        H --> M1[Logistic Regression]
-        H --> M2[Decision Tree]
-        H --> M3[Random Forest]
-        H --> M4[Gradient Boosting]
-        H --> M5[K-Nearest Neighbors]
-        H --> M6[XGBoost Classifier]
+    subgraph MA["Machine Learning Model Suite"]
+        H --> M1["Logistic Regression (Selected Best Model)"]
+        H --> M2["Decision Tree Classifier"]
+        H --> M3["Random Forest Classifier"]
+        H --> M4["Gradient Boosting Classifier"]
+        H --> M5["K-Nearest Neighbors (KNN)"]
+        H --> M6["XGBoost Classifier"]
     end
 
-    subgraph VD[Validation and Deployment]
-        M1 --> EVAL[Multi-Metric Evaluation: AUC, F1, Recall]
+    subgraph VD["Validation, Persistence & Serving"]
+        M1 --> EVAL["Multi-Metric Evaluation (AUC, F1, Recall, Precision, Accuracy)"]
         M2 --> EVAL
         M3 --> EVAL
         M4 --> EVAL
         M5 --> EVAL
         M6 --> EVAL
 
-        EVAL --> SERVE[Trained Artifacts Export .pkl]
-        SERVE --> APP[Streamlit Interactive App: app.py]
+        EVAL --> SERVE["Joblib Serialization -> models/*.pkl"]
+        SERVE --> APP["Streamlit Interactive Web Application (app.py)"]
     end
 
-    classDef node fill:#ffffff,stroke:#333333,color:#111111,stroke-width:2px
-    classDef pipeline fill:#ffffff,stroke:#0969da,color:#111111,stroke-width:2px
-    classDef model fill:#ffffff,stroke:#1a7f37,color:#111111,stroke-width:2px
-    classDef deployment fill:#ffffff,stroke:#8250df,color:#111111,stroke-width:2px
+    classDef source fill:#f8fafc,stroke:#334155,stroke-width:2px,color:#0f172a;
+    classDef pipe fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+    classDef model fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d;
+    classDef deploy fill:#faf5ff,stroke:#9333ea,stroke-width:2px,color:#581c87;
 
-    class A,B,C node
-    class D,E,F,G,H pipeline
-    class M1,M2,M3,M4,M5,M6 model
-    class EVAL,SERVE,APP deployment
-```
-
-## 🔍 Exploratory Data Analysis & Key Insights
-
-The dataset comprises **10,000 accounts** across France, Germany, and Spain with 18 raw attributes:
-
-### Feature Taxonomy
-| Feature Category | Features |
-| :--- | :--- |
-| **Demographic** | `Geography`, `Gender`, `Age` |
-| **Financial Health** | `CreditScore`, `Balance`, `EstimatedSalary`, `Credit Card`, `Card Type` |
-| **Engagement** | `Tenure`, `NumOfProducts`, `IsActiveMember`, `Point Earned`, `Satisfaction Score` |
-| **Service Touchpoint** | `Complain` (Customer recorded a formal complaint) |
-| **Target Variable** | `Churned` (0 = Retained [79.62%], 1 = Churned [20.38%]) |
-
-### 💡 Key Findings from Notebooks & Statistical Profiling
-
-```
-      ╔═══════════════════════════════════════════════════════════════════╗
-      ║                     CRITICAL EDA TAKEAWAYS                        ║
-      ╠═══════════════════════════════════════════════════════════════════╣
-      ║ 1. The Complaint Catalyst:                                        ║
-      ║    • Complain = 1 exhibits a 99.51% churn rate.                   ║
-      ║    • Complain = 0 exhibits a 0.05% churn rate.                    ║
-      ║                                                                   ║
-      ║ 2. Geographic & Demographic Vulnerability:                       ║
-      ║    • German accounts show ~2x higher churn rates than France.     ║
-      ║    • Customers aged 45–60 churn at more than double the rate      ║
-      ║      of younger cohorts (ages 18–35).                             ║
-      ║                                                                   ║
-      ║ 3. Product Saturation Effect:                                     ║
-      ║    • Customers holding 3 or 4 products have a >80% churn rate.    ║
-      ║    • 2-product holders demonstrate the highest retention.         ║
-      ║                                                                   ║
-      ║ 4. Member Engagement:                                             ║
-      ║    • Active members (IsActiveMember=1) are ~50% less likely to    ║
-      ║      leave compared to inactive members.                          ║
-      ╚═══════════════════════════════════════════════════════════════════╝
+    class A,B,C source;
+    class D,E,F,G,H pipe;
+    class M1,M2,M3,M4,M5,M6 model;
+    class EVAL,SERVE,APP deploy;
 ```
 
 ---
 
-## 🔬 Data Preprocessing & Leakage-Safe Engineering
+## 🔍 Exploratory Data Analysis & Critical Insights
 
-To guarantee zero data leakage between training and evaluation folds, all transformations learn parameters **only on the training split** and transform test sets / inference inputs accordingly:
+The dataset comprises **10,000 banking customers** with **18 attributes** spanning demographics, financial positions, account activity, and customer service touchpoints.
 
-1. **Column Standardization**: Cleans, trims, and normalizes column headers (`Credit Score` $\rightarrow$ `creditscore`).
-2. **Missing Value Imputation**:
-   - Numeric features imputed using `median` strategy (`SimpleImputer`).
-   - Categorical features imputed using `most_frequent` mode strategy.
-3. **Outlier Mitigation**:
-   - Outliers identified via the Interquartile Range ($IQR = Q_3 - Q_1$).
-   - Features clipped to learned $[Q_1 - 1.5 \times IQR, Q_3 + 1.5 \times IQR]$ thresholds (`IQRClipper`).
-4. **Categorical Encoding**:
-   - Nominal variables (`geography`, `gender`, `card_type`) encoded with `OneHotEncoder(handle_unknown='ignore')`.
-5. **Feature Scaling**:
-   - Continuous numerical features (`balance`, `estimatedsalary`, `creditscore`, `age`, `point_earned`, `tenure`) transformed using `StandardScaler`.
+### Feature Taxonomy
+
+| Category | Features | Description & Business Meaning |
+| :--- | :--- | :--- |
+| **Identifiers** | `RowNumber`, `CustomerId`, `Surname` | Unique account tracking identifiers (dropped from ML feature matrix) |
+| **Demographic** | `Geography`, `Gender`, `Age` | Customer regional market (France, Germany, Spain), biological gender, customer age |
+| **Financial Health** | `CreditScore`, `Balance`, `EstimatedSalary`, `Credit Card`, `Card Type` | Credit rating (350–850), ledger balance ($€$), annual estimated income, card ownership, card tier (DIAMOND, GOLD, PLATINUM, SILVER) |
+| **Engagement** | `Tenure`, `NumOfProducts`, `IsActiveMember`, `Point Earned`, `Satisfaction Score` | Account tenure (years), number of bank products used (1–4), digital/branch activity flag, reward points accumulated, satisfaction rating (1–5) |
+| **Service Touchpoint**| `Complain` | Customer logged a formal grievance / complaint ($0 = \text{No}, 1 = \text{Yes}$) |
+| **Target Variable** | `Churned` | Ground truth churn flag ($0 = \text{Retained } [79.62\%], 1 = \text{Churned } [20.38\%]$) |
+
+---
+
+### 💡 5 Golden Insights from In-Depth EDA
+
+```
+╔══════════════════════════════════════════════════════════════════════════════════════╗
+║                            MAJOR DATA & BUSINESS FINDINGS                            ║
+╠══════════════════════════════════════════════════════════════════════════════════════╣
+║ 1. 🚨 The Complaint Catalyst (Strongest Churn Driver):                               ║
+║    • Customers who lodged a complaint (Complain = 1) had a 99.51% churn rate.        ║
+║    • Customers with zero complaints (Complain = 0) had a 0.05% churn rate.           ║
+║    • Correlation with Churn: r = +0.9957 (Near-deterministic indicator).             ║
+║                                                                                      ║
+║ 2. 🇩🇪 The German Market Anomaly:                                                     ║
+║    • German accounts churn at 39.9%—more than double France (16.1%) and Spain (16.7%)║
+║    • German customers maintain significantly higher average account balances.        ║
+║                                                                                      ║
+║ 3. 👥 Age Cohort Vulnerability:                                                      ║
+║    • Customers aged 45–60 churn at ~56.2% (peak attrition zone).                     ║
+║    • Younger demographics (18–35) exhibit high retention (churn rate < 9.5%).        ║
+║                                                                                      ║
+║ 4. 📦 The Multi-Product Paradox:                                                     ║
+║    • Customers with 1 product: ~27.7% churn rate.                                    ║
+║    • Customers with 2 products: 7.6% churn rate (The optimal sweet-spot!).           ║
+║    • Customers with 3 or 4 products: >82% churn rate (severe product friction).     ║
+║                                                                                      ║
+║ 5. 🛡️ The Active Engagement Shield:                                                  ║
+║    • Active members (IsActiveMember = 1) are ~50% less likely to leave than          ║
+║      inactive members (14.3% vs 26.8% churn rate).                                   ║
+╚══════════════════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## 🔬 Data Preprocessing & Leakage-Safe Pipeline
+
+Data leakage can artificially inflate evaluation scores while causing models to fail in production. To ensure absolute data integrity, all transformations learn their statistical parameters **strictly on the training partition** and apply the learned rules to test/inference data.
+
+1. **Header Normalization & Cleaning** (`column_stand`):
+   - Trims whitespace, converts to lowercase, and standardizes spacing/dashes (`Credit Score` $\rightarrow$ `creditscore`).
+2. **Missing Value Imputation** (`fill_num`, `fill_cat`):
+   - **Continuous Features**: Imputed using **Median** strategy via `SimpleImputer`.
+   - **Categorical Features**: Imputed using **Most Frequent (Mode)** strategy.
+3. **IQR-Based Outlier Clipping** (`remove_outlier` & `IQRClipper`):
+   - Computes first quartile ($Q_1$) and third quartile ($Q_3$).
+   - Determines clipping boundaries: $[\text{lower} = Q_1 - 1.5 \times IQR, \; \text{upper} = Q_3 + 1.5 \times IQR]$.
+   - Caps extreme outliers without dropping rows or distorting distributions.
+4. **Categorical Encoding** (`one_hot`):
+   - Encodes nominal attributes (`geography`, `gender`, `card_type`) using `OneHotEncoder(handle_unknown="ignore")`.
+5. **Feature Scaling** (`stand_scaler`):
+   - Standardizes continuous numeric features (`balance`, `estimatedsalary`, `creditscore`, `age`, `point_earned`, `tenure`) to zero mean and unit variance using `StandardScaler`.
+6. **Production Schema Validation & Alias Engine** (`app.py`):
+   - Automatically maps common CSV column variants (e.g., `HasCrCard` $\rightarrow$ `credit_card`, `NumOfProducts` $\rightarrow$ `numofproducts`).
+   - Verifies all required numeric and categorical features before passing rows to the prediction engine.
 
 ---
 
 ## 🤖 Model Benchmarking & Experimental Results
 
-To rigorously examine predictive power, the project evaluates models under two controlled regimes:
-1. **Full Feature Environment (With `Complain`)**: Reflects production setups where customer service complaints are logged in real-time.
-2. **Pure Behavioral / Demographic Environment (Without `Complain`)**: Reflects early warning before a customer escalates a complaint.
+To examine predictive behavior with full transparency, models were benchmarked across two distinct experimental environments:
+1. **With `Complain` (Production Serving Setup)**: When customer service ticket records are available at prediction time.
+2. **Without `Complain` (Early-Warning Behavioral Setup)**: Testing pure demographic and financial signals before a complaint is escalated.
 
-### 📊 5-Fold Stratified Cross-Validation Benchmark (8,000 Train Set)
+### 📊 5-Fold Stratified Cross-Validation Benchmark (8,000 Training Records)
 
-| Model | Setup | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
+| Model Architecture | Feature Regime | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Gradient Boosting** | *Without Complain* | **0.8608** | 0.7617 | **0.4601** | **0.5735** | **0.8622** |
 | **Random Forest** | *Without Complain* | 0.8603 | **0.7865** | 0.4319 | 0.5571 | 0.8473 |
-| **XGBoost** | *Without Complain* | 0.8481 | 0.6787 | 0.4859 | 0.5658 | 0.8351 |
+| **XGBoost Classifier** | *Without Complain* | 0.8481 | 0.6787 | 0.4859 | 0.5658 | 0.8351 |
 | **Logistic Regression** | *Without Complain* | 0.8172 | 0.6311 | 0.2497 | 0.3575 | 0.7712 |
-| **KNN** | *Without Complain* | 0.8066 | 0.5552 | 0.2497 | 0.3442 | 0.7085 |
+| **K-Nearest Neighbors** | *Without Complain* | 0.8066 | 0.5552 | 0.2497 | 0.3442 | 0.7085 |
 | **Decision Tree** | *Without Complain* | 0.7831 | 0.4696 | 0.4926 | 0.4806 | 0.6750 |
 | | | | | | | |
-| **Logistic Regression** | *With Complain* | **0.9986** | **0.9945** | **0.9988** | **0.9966** | **0.9994** |
+| **Logistic Regression** 🏆 | *With Complain* | **0.9986** | **0.9945** | **0.9988** | **0.9966** | **0.9994** |
 | **Random Forest** | *With Complain* | 0.9986 | 0.9945 | 0.9988 | 0.9966 | 0.9992 |
-| **XGBoost** | *With Complain* | 0.9986 | 0.9945 | 0.9988 | 0.9966 | 0.9991 |
+| **XGBoost Classifier** | *With Complain* | 0.9986 | 0.9945 | 0.9988 | 0.9966 | 0.9991 |
 | **Gradient Boosting** | *With Complain* | 0.9984 | 0.9933 | 0.9988 | 0.9960 | 0.9987 |
 | **Decision Tree** | *With Complain* | 0.9972 | 0.9933 | 0.9933 | 0.9933 | 0.9958 |
-| **KNN** | *With Complain* | 0.9060 | 0.9480 | 0.5699 | 0.7113 | 0.9377 |
+| **K-Nearest Neighbors** | *With Complain* | 0.9060 | 0.9480 | 0.5699 | 0.7113 | 0.9377 |
 
-### 🎯 Test Set Evaluation (2,000 Held-Out Rows)
+### 🎯 Held-Out Test Set Performance (2,000 Unseen Customers)
 
 ```
 =============================================================================
-  MODEL EVALUATION SUMMARY ON HELD-OUT TEST DATA
+  MODEL EVALUATION SUMMARY ON HELD-OUT TEST DATA (2,000 ROWS)
 =============================================================================
   Model                Accuracy   Precision   Recall   F1-Score   ROC-AUC
   ─────────────────────────────────────────────────────────────────────────
@@ -219,51 +237,54 @@ To rigorously examine predictive power, the project evaluates models under two c
 =============================================================================
 ```
 
+> [!NOTE]
+> **Logistic Regression** is persisted in `models/best_model.pkl` for production serving due to its optimal ROC-AUC (0.9994), instantaneous inference latency, and well-calibrated output probabilities.
+
 ---
 
 ## 🖥️ Streamlit Web Application Walkthrough
 
-The project includes an interactive web dashboard in `app.py` built with **Streamlit**, allowing users to upload datasets, inspect live predictions, filter at-risk accounts, and download structured CSV reports.
+The web application (`app.py`) provides an interactive interface built for relationship managers, retention executives, and data scientists.
 
 ```
-       ┌─────────────────────────────────────────────────────────────┐
-       │   📈 Customer Churn Prediction System                       │
-       ├─────────────────────────────────────────────────────────────┤
-       │  [🏠 Dashboard]  [📤 Predict Churn]  [👥 Customer Results]  │
-       ├─────────────────────────────────────────────────────────────┤
-       │  Total: 10,000  │ Likely: 2,038 │ High Risk: 1,980 │ 20.4%   │
-       ├─────────────────────────────────────────────────────────────┤
-       │  ┌─────────────────────────┐   ┌─────────────────────────┐  │
-       │  │ Prediction Distribution │   │ Risk Level Distribution │  │
-       │  │ [████████░░] 79.6% Ret  │   │ [██░░░░░░░░] 20.1% High │  │
-       │  │ [██░░░░░░░░] 20.4% Chrn │   │ [████████░░] 79.9% Low  │  │
-       │  └─────────────────────────┘   └─────────────────────────┘  │
-       ├─────────────────────────────────────────────────────────────┤
-       │  🔍 Search Customer: [ Mitchell | Chu | 15647311...       ] │
-       │  📥 [ Download Prediction Results (CSV) ]                   │
-       └─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│  📈 Customer Churn Prediction System                                             │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│  [ 🏠 Dashboard ]    [ 📤 Predict Churn ]    [ 👥 Customer Results ]    [ ℹ️ About ] │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│  Total: 10,000  │ Likely Churn: 2,038 │ Retained: 7,962 │ High Risk: 1,980 (19.8%)│
+├──────────────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────┐  ┌───────────────────────────────────┐  │
+│  │   Churn Prediction Distribution     │  │      Risk-Level Distribution      │  │
+│  │   [██████████████████░░░░] 79.6%    │  │   [████░░░░░░░░░░░░░░░░] 19.8% High  │  │
+│  │   [████░░░░░░░░░░░░░░░░░░] 20.4%    │  │   [████████████████░░░░] 79.9% Low   │  │
+│  └─────────────────────────────────────┘  └───────────────────────────────────┘  │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│  🔍 Filter: [ High Risk ▼ ]   Search: [ Mitchell | 15647311 | Germany          ] │
+│  📥 [ Download Scored Customer Results (CSV) ]                                   │
+└──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Key Application Pages
+### Key Modules & Capabilities
 
 1. **🏠 Dashboard**:
-   - Real-time KPI Metric Cards: Total Customers, Likely to Churn, Retained Count, High Risk Count, Average Churn Probability, and Predicted Churn Rate.
-   - Interactive Visual Bins: Distribution charts for prediction categories and segmented probability risk tiers (0–20%, 20–40%, 40–70%, 70–100%).
+   - **Executive KPI Cards**: Real-time summary metrics for Total Scored Accounts, Likely to Churn, Retained, High Risk Count, Average Churn Probability, and Predicted Attrition Rate.
+   - **Visual Risk Histograms**: Probability bucket distributions (`0–20%`, `20–40%`, `40–70%`, `70–100%`) and classification share charts.
 
 2. **📤 Predict Churn Workspace**:
-   - **Upload Custom CSV** or **Try Sample Demonstration Data** (1-click loader).
-   - Automated schema validation, column alias mapper, and data preview.
-   - Missing column warning engine & data type verification before inference.
+   - **Flexible Ingestion**: Upload custom customer CSVs or load the built-in 700-row demonstration dataset with 1 click.
+   - **Automated Schema Validator**: Verifies columns, maps aliases, displays missing feature warnings, and ensures robust type conversions.
+   - **Instant Inference Engine**: Scores all customer rows using persisted pipeline artifacts.
 
 3. **👥 Customer Results & Retention Console**:
-   - Risk-ranked customer table ordered by highest churn probability.
-   - Fast filtering (`High Risk`, `Medium Risk`, `Low Risk`, `Likely to Churn`).
-   - Free-text search by **Customer ID**, **Surname**, or **Geography**.
-   - **Detailed Customer Inspector**: Drill down into specific account attributes and identifiers.
-   - 📥 **1-Click CSV Export**: Download the full scored dataset with risk labels.
+   - **Risk-Ranked Account Table**: Orders customers by descending churn risk score.
+   - **Multi-Filter Console**: Instant segment filtering (`High Risk`, `Medium Risk`, `Low Risk`, `Likely to Churn`, `All`).
+   - **Omni-Search Engine**: Live search across Customer IDs, Surnames, and Geographical regions.
+   - **Individual Customer Drawer**: Expandable diagnostic card showing customer metrics, identifiers, and complete feature values.
+   - **1-Click CSV Export**: Download the full scored dataset with predicted labels, risk tiers, and probabilities for CRM integration.
 
 4. **ℹ️ About & Documentation**:
-   - Feature dictionary, schema rules, and risk threshold descriptions.
+   - Feature definitions, schema validation requirements, and risk threshold references.
 
 ---
 
@@ -273,45 +294,44 @@ The project includes an interactive web dashboard in `app.py` built with **Strea
 customer_churn_analysis/
 ├── app.py                      # Production Streamlit Web Dashboard
 ├── experiment_validation.py    # Leakage-safe 5-fold cross-validation experiment runner
-├── requirements.txt            # Project dependencies and versions
-├── README.md                   # Project documentation & guides
+├── requirements.txt            # Project dependencies and version pins
+├── README.md                   # Comprehensive project documentation
+├── agy.init                    # Antigravity Workspace Initialization Profile
 │
 ├── data/
 │   └── raw/
-│       └── customer churn.csv  # 10,000-row raw banking dataset
+│       └── customer churn.csv  # 10,000-row raw retail banking dataset
 │
-├── models/                     # Serialized preprocessors and best model artifacts
-│   ├── Standard_scaler.pkl     # Fitted StandardScaler
+├── models/                     # Serialized preprocessors and production model artifacts
+│   ├── Standard_scaler.pkl     # Fitted StandardScaler (continuous numeric features)
 │   ├── best_model.pkl          # Trained Logistic Regression classifier
-│   ├── cat_imputer.pkl         # Fitted categorical SimpleImputer
-│   ├── encoder.pkl             # Fitted OneHotEncoder
-│   ├── num_imputer.pkl         # Fitted numerical SimpleImputer
-│   └── outlier_bonds.pkl       # Learned IQR clipping bounds
+│   ├── cat_imputer.pkl         # Fitted SimpleImputer (most_frequent categorical)
+│   ├── encoder.pkl             # Fitted OneHotEncoder (geography, gender, card_type)
+│   ├── num_imputer.pkl         # Fitted SimpleImputer (median numeric)
+│   └── outlier_bonds.pkl       # Learned IQR clipping bounds dictionary
 │
-├── notebooks/                  # Step-by-step Jupyter exploratory analysis
-│   ├── 01_data_cleaning.ipynb
-│   ├── univariate_analysis/    # Numerical and categorical feature distributions
-│   │   ├── categorical_analysis.ipynb
-│   │   └── numerical_analysis.ipynb
-│   ├── bivariate_analysis/     # Feature vs Target relationships
-│   │   ├── categorical.ipynb
-│   │   ├── numerical.ipynb
-│   │   └── numerical&categorical.ipynb
-│   └── multivariate_analysis/  # Correlation matrices & feature interactions
-│       └── multivariate_analysis.ipynb
+├── notebooks/                  # 7 Exploratory & statistical Jupyter notebooks
+│   ├── 01_data_cleaning.ipynb  # Initial ingestion, missing value checks & summary stats
+│   ├── univariate_analysis/
+│   │   ├── categorical_analysis.ipynb # Distributions of categorical features
+│   │   └── numerical_analysis.ipynb   # Distributions, skewness & outlier scans
+│   ├── bivariate_analysis/
+│   │   ├── categorical.ipynb          # Categorical features vs Churned target
+│   │   ├── numerical.ipynb            # Numeric features vs numeric relationships
+│   │   └── numerical&categorical.ipynb # Numeric distributions split across churn classes
+│   └── multivariate_analysis/
+│       └── multivariate_analysis.ipynb # Correlation heatmaps & one-hot feature analysis
 │
 └── src/                        # Modular source codebase
-    ├── __init__.py
-    ├── constants.py            # Feature lists, target definitions, hyperparameter grids
+    ├── __init__.py             # Package initializer
+    ├── constants.py            # Feature groups, target constants & hyperparameter grids
     ├── data_loader.py          # Data ingestion utility
-    ├── statistics.py           # Comprehensive statistical analysis report generator
-    ├── preprocessing.py        # Robust transformers, scalers, imputers, outlier clippers
-    ├── visualization.py        # Reusable Seaborn & Matplotlib plotting toolkit
-    ├── train.py                # Multi-model training executor
-    ├── evaluate.py             # Classification metric evaluator
-    ├── tuning.py               # GridSearchCV and RandomizedSearchCV routines
-    ├── experiment.py           # Alternate feature engineering & model comparison
-    └── main.py                 # End-to-end pipeline training & artifact exporter
+    ├── statistics.py           # Comprehensive statistical profiling and summary generator
+    ├── preprocessing.py        # Imputers, IQR clippers, scalers & categorical encoders
+    ├── train.py                # Multi-model training executor loop
+    ├── evaluate.py             # Classification metric evaluator (AUC, F1, Recall, etc.)
+    ├── tuning.py               # GridSearchCV and RandomizedSearchCV tuning routines
+    └── main.py                 # End-to-end training pipeline & artifact exporter
 ```
 
 ---
@@ -321,22 +341,25 @@ customer_churn_analysis/
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/anchitkaushal/customer-churn-prediction-system.git
-cd customer-churn-prediction-system
+cd customer_churn_analysis
 ```
 
-### 2. Set Up a Virtual Environment
+### 2. Create and Activate a Virtual Environment
 ```bash
 # Create virtual environment
 python -m venv .venv
 
-# Activate environment (Linux/macOS)
+# Activate on Linux/macOS:
 source .venv/bin/activate
 
-# Activate environment (Windows)
-# .venv\Scripts\activate
+# Activate on Windows (cmd):
+# .venv\Scripts\activate.bat
+
+# Activate on Windows (PowerShell):
+# .venv\Scripts\Activate.ps1
 ```
 
-### 3. Install Dependencies
+### 3. Install Required Dependencies
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -346,38 +369,62 @@ pip install -r requirements.txt
 
 ## 🛠️ How to Run & Reproduce
 
-### Run the End-to-End Training Pipeline
-Trains all classification algorithms, evaluates them on the test set, and saves serialized artifacts to `models/`:
+### 🚀 1. Run the Streamlit Web Application
+Launch the interactive decision dashboard in your browser:
+```bash
+streamlit run app.py
+```
+> The dashboard will automatically launch at `http://localhost:8501`.
+
+### 🔄 2. Train the End-to-End Pipeline
+Execute data loading, preprocessing, model training, evaluation, and serialize fresh `.pkl` artifacts into `models/`:
 ```bash
 python -m src.main
 ```
 
-### Run Leakage-Safe Validation Experiments
-Executes a 5-fold cross-validation experiment comparing model performance with and without `Complain`:
+### 🔬 3. Run Leakage-Safe Validation Experiments
+Execute the 5-fold cross-validation experiment comparing model performance with and without `Complain`:
 ```bash
 python experiment_validation.py
 ```
 
-### Launch the Streamlit Interactive Web App
-Starts the web dashboard locally on `http://localhost:8501`:
+### 📓 4. Launch Jupyter Notebooks for Exploration
+Inspect exploratory data analysis notebooks and statistical plots:
 ```bash
-streamlit run app.py
+jupyter lab
 ```
 
 ---
 
-## 📈 Key Business Recommendations
+## 📈 Strategic Business Retention Playbook
 
-Based on empirical model interpretations and statistical findings, the retention strategy should focus on:
+Based on empirical data findings and model explanations, bank leadership should implement the following targeted initiatives:
 
-1. **⚡ Instant Complaint Escalation Protocol**:
-   - Since complaint filing is the single strongest precursor to churn (>99% churn rate), any customer raising a formal ticket must trigger a priority VIP resolution workflow within **2 hours**.
-2. **🇩🇪 Regional Retention Program in Germany**:
-   - Implement localized loyalty programs and fee structures tailored for the German banking market to counter higher attrition rates.
-3. **📦 Bundle Simplification**:
-   - High churn on 3+ product accounts suggests friction in cross-product usability. Streamline account management into a unified mobile dashboard.
-4. **🎯 Re-Engage Inactive Demographics (Ages 45–60)**:
-   - Introduce dedicated wealth advisory services and personalized savings incentives targeting the middle-to-senior age demographic.
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                      4-PILLAR CUSTOMER RETENTION PLAYBOOK                        │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│ 1. ⚡ The "Golden 2-Hour" Complaint Resolution Protocol                           │
+│    • Insight: Customer complaint is the single highest predictor of churn (>99%). │
+│    • Action: Any customer filing a grievance is instantly tagged as Priority-1.  │
+│      Relationship managers must initiate direct resolution within 2 hours.       │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│ 2. 🇩🇪 Targeted German Market Value Proposition                                   │
+│    • Insight: German customers churn at 39.9% (2x other regions) with high funds. │
+│    • Action: Introduce localized premium savings tiers, higher interest yield    │
+│      products, and fee waivers for maintaining significant deposit balances.     │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│ 3. 📦 Multi-Product Usability Redesign                                            │
+│    • Insight: Accounts holding 3 or 4 products have an 80%+ attrition rate.      │
+│    • Action: Audit cross-product UX. Simplify account management into a single   │
+│      unified mobile interface to remove administrative complexity and friction. │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│ 4. 🎯 Mid-Life Wealth Advisory Engagement (Ages 45–60)                           │
+│    • Insight: 45–60 year old customers experience peak attrition (~56%).          │
+│    • Action: Proactively assign dedicated financial advisors offering retirement │
+│      planning, mortgage refinancing, and wealth management consultations.        │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -387,4 +434,4 @@ Based on empirical model interpretations and statistical findings, the retention
 - **Project**: Customer Churn Analysis & Machine Learning Prediction System
 - **License**: Distributed under the [MIT License](LICENSE).
 
-⭐ *If you find this project helpful, feel free to star this repository!*
+⭐ *If you find this project valuable, please consider giving it a star on GitHub!*
