@@ -109,13 +109,14 @@ flowchart TD
         SERVE --> APP[Streamlit Interactive App: app.py]
     end
 
-    classDef default fill:#21262d,color:#ffffff,stroke:#8b949e
-    classDef pipeline fill:#161b22,color:#ffffff,stroke:#58a6ff
-    classDef models fill:#161b22,color:#ffffff,stroke:#3fb950
-    classDef deployment fill:#161b22,color:#ffffff,stroke:#a371f7
+    classDef node fill:#ffffff,stroke:#333333,color:#111111,stroke-width:2px
+    classDef pipeline fill:#ffffff,stroke:#0969da,color:#111111,stroke-width:2px
+    classDef model fill:#ffffff,stroke:#1a7f37,color:#111111,stroke-width:2px
+    classDef deployment fill:#ffffff,stroke:#8250df,color:#111111,stroke-width:2px
 
-    class A,B,C,D,E,F,G,H pipeline
-    class M1,M2,M3,M4,M5,M6 models
+    class A,B,C node
+    class D,E,F,G,H pipeline
+    class M1,M2,M3,M4,M5,M6 model
     class EVAL,SERVE,APP deployment
 ```
 
