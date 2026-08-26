@@ -75,27 +75,12 @@ Financial institutions face high customer acquisition costs ($200–$500+ per re
 The codebase is built with strict modularity, separating exploration, feature transformations, evaluation, model persistence, and UI serving:
 
 ```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#0d1117",
-    "primaryColor": "#21262d",
-    "primaryTextColor": "#ffffff",
-    "primaryBorderColor": "#8b949e",
-    "lineColor": "#8b949e",
-    "secondaryColor": "#161b22",
-    "tertiaryColor": "#161b22",
-    "clusterBkg": "#161b22",
-    "clusterBorder": "#8b949e"
-  }
-}}%%
-
 flowchart TD
 
-    A[Raw Data: customer churn.csv] --> B[Data Cleaning & Column Standardization]
-    B --> C[Stratified Train / Test Split 80/20]
+    A[Raw Data: customer churn.csv] --> B[Data Cleaning and Column Standardization]
+    B --> C[Stratified Train Test Split 80/20]
 
-    subgraph DP["Data Pipeline"]
+    subgraph DP[Data Pipeline]
         C --> D[Median Numeric Imputer]
         D --> E[Modal Categorical Imputer]
         E --> F[IQR Outlier Bounds Clipper]
@@ -103,7 +88,7 @@ flowchart TD
         G --> H[Standard / Robust Scaler]
     end
 
-    subgraph MA["Model Arena"]
+    subgraph MA[Model Arena]
         H --> M1[Logistic Regression]
         H --> M2[Decision Tree]
         H --> M3[Random Forest]
@@ -112,7 +97,7 @@ flowchart TD
         H --> M6[XGBoost Classifier]
     end
 
-    subgraph VD["Validation & Deployment"]
+    subgraph VD[Validation and Deployment]
         M1 --> EVAL[Multi-Metric Evaluation: AUC, F1, Recall]
         M2 --> EVAL
         M3 --> EVAL
@@ -123,6 +108,15 @@ flowchart TD
         EVAL --> SERVE[Trained Artifacts Export .pkl]
         SERVE --> APP[Streamlit Interactive App: app.py]
     end
+
+    classDef default fill:#21262d,color:#ffffff,stroke:#8b949e
+    classDef pipeline fill:#161b22,color:#ffffff,stroke:#58a6ff
+    classDef models fill:#161b22,color:#ffffff,stroke:#3fb950
+    classDef deployment fill:#161b22,color:#ffffff,stroke:#a371f7
+
+    class A,B,C,D,E,F,G,H pipeline
+    class M1,M2,M3,M4,M5,M6 models
+    class EVAL,SERVE,APP deployment
 ```
 
 ## 🔍 Exploratory Data Analysis & Key Insights
