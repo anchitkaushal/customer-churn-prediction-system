@@ -1,0 +1,77 @@
+# Antigravity Workspace Initialization Profile (agy.init)
+# Project: Customer Churn Analysis (Exploratory Data Analysis)
+
+[PROJECT_METADATA]
+project_name        = "Customer Churn Analysis"
+description         = "Exploratory Data Analysis (EDA) on customer churn demographics and behavior"
+python_version      = ">=3.10"
+requirements_file   = "requirements.txt"
+virtual_env_dir     = ".venv"
+data_raw_path       = "data/raw/customer churn.csv"
+data_processed_path = "data/processed/"
+
+[WORKSPACE_STRUCTURE]
+.
+├── .venv/                         # Python Virtual Environment
+├── data/                          # Data Storage Directory
+│   ├── raw/
+│   │   └── customer churn.csv     # Raw input dataset
+│   └── processed/                 # Prepared datasets for modeling
+├── notebooks/                     # Jupyter Notebooks for EDA
+│   ├── 01_data_cleaning.ipynb     # Initial load, missing value check, numerical correlation
+│   ├── univariate_analysis/       # Univariate analysis
+│   │   ├── categorical_analysis.ipynb
+│   │   └── numerical_analysis.ipynb
+│   ├── bivariate_analysis/        # Bivariate analysis
+│   │   ├── categorical.ipynb      # Categorical features vs Churned
+│   │   ├── numerical.ipynb        # Numeric vs numeric combinations
+│   │   └── numerical&categorical.ipynb # Numeric/categorical vs Churned boxplots
+│   └── multivariate_analysis/     # Multivariate analysis
+│       └── multivariate_analysis.ipynb # One-hot dummy encoding and correlation bar charts
+├── src/                           # Custom python scripts and utility modules
+│   ├── __init__.py
+│   ├── constants.py
+│   ├── data_loader.py
+│   ├── preprocessing.py
+│   ├── visualization.py
+│   ├── statistics.py
+│   ├── generate_mock_data.py      # Script for mock data pipeline
+│   └── utils.py                   # Repetitive plotting and loading helpers
+├── agy.init                       # This Workspace Initialization File
+├── requirements.txt               # Project library dependencies
+└── README.md                      # Workspace documentation
+
+[DATASET_SCHEMA_AND_INSIGHTS]
+dataset_shape       = (10000, 18)
+missing_values      = "0.0% (No missing values in any feature)"
+target_feature      = "Churned"
+churn_rate          = "20.38% (Churned: 2,038 | Non-Churned: 7,962)"
+
+features_list = [
+    "RowNumber", "CustomerId", "Surname", "CreditScore", "Geography",
+    "Gender", "Age", "Tenure", "Balance", "NumOfProducts", "Credit Card",
+    "IsActiveMember", "EstimatedSalary", "Churned", "Complain",
+    "Satisfaction Score", "Card Type", "Point Earned"
+]
+
+key_correlations_with_target = {
+    "Complain": 0.9957,           # Extremely strong positive correlation
+    "Age": 0.2853,                # Moderate positive correlation
+    "Balance": 0.1186,             # Weak positive correlation
+    "IsActiveMember": -0.1564      # Moderate negative correlation
+}
+
+[WORKSPACE_SETUP_COMMANDS]
+# Commands to initialize the python virtual environment and verify workspace
+init_env    = "python3 -m venv .venv"
+activate    = "source .venv/bin/activate"
+install_req = "pip install -r requirements.txt"
+run_jupyter = "jupyter lab --port 8888"
+
+[AGENT_GUIDELINES_AND_RULES]
+# Custom directives for agy agents working in this repository:
+1. Always keep the virtual environment (.venv/) clean; install libraries through requirements.txt.
+2. In EDA notebooks, use unified styling palettes (e.g. seaborn cubehelix_palette, proper labels, and figure sizes of (10, 5)).
+3. When processing data, write cleaner modular scripts under src/utils.py rather than writing redundant functions in multiple notebooks.
+4. When writing changes back to raw or processed data folders, preserve original datasets under data/raw/ and store transformations in data/processed/.
+5. Do not drop critical identifiers like CustomerId or Surname from raw files; keep drop operations local to feature engineering datasets.
