@@ -76,66 +76,9 @@ A leading international bank is experiencing customer attrition across its Europ
 
 The system is built on modular Python packages, separating data loading, statistical profiling, feature engineering, model training, evaluation, hyperparameter tuning, and web serving.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "flowchart": {
-    "htmlLabels": false
-  },
-  "themeVariables": {
-    "primaryColor": "#ffffff",
-    "primaryTextColor": "#111827",
-    "primaryBorderColor": "#374151",
-    "lineColor": "#6b7280",
-    "secondaryColor": "#ffffff",
-    "tertiaryColor": "#ffffff"
-  }
-}}%%
 
-flowchart TD
+<img width="3438" height="3086" alt="diagram" src="https://github.com/user-attachments/assets/283c6160-e33c-4559-8c87-b09467935acf" />
 
-    A["Raw Customer Dataset: customer churn.csv (10,000 records)"] --> B["Data Cleaning & Column Standardization"]
-    B --> C["Stratified 80/20 Train-Test Split (8,000 Train / 2,000 Test)"]
-
-    subgraph DP["Leakage-Safe Preprocessing Pipeline"]
-        C --> D["Median Imputer (Numeric Features)"]
-        D --> E["Modal Imputer (Categorical Features)"]
-        E --> F["IQR Outlier Bounds Clipper"]
-        F --> G["One-Hot Categorical Encoder"]
-        G --> H["StandardScaler (Continuous Features)"]
-    end
-
-    subgraph MA["Machine Learning Model Suite"]
-        H --> M1["Logistic Regression (Selected Best Model)"]
-        H --> M2["Decision Tree Classifier"]
-        H --> M3["Random Forest Classifier"]
-        H --> M4["Gradient Boosting Classifier"]
-        H --> M5["K-Nearest Neighbors (KNN)"]
-        H --> M6["XGBoost Classifier"]
-    end
-
-    subgraph VD["Validation, Persistence & Serving"]
-        M1 --> EVAL["Multi-Metric Evaluation: AUC, F1, Recall, Precision, Accuracy"]
-        M2 --> EVAL
-        M3 --> EVAL
-        M4 --> EVAL
-        M5 --> EVAL
-        M6 --> EVAL
-
-        EVAL --> SERVE["Joblib Serialization - models/*.pkl"]
-        SERVE --> APP["Streamlit Interactive Web Application - app.py"]
-    end
-
-    classDef source fill:#ffffff,stroke:#334155,stroke-width:2px,color:#111827
-    classDef pipe fill:#ffffff,stroke:#2563eb,stroke-width:2px,color:#111827
-    classDef model fill:#ffffff,stroke:#16a34a,stroke-width:2px,color:#111827
-    classDef deploy fill:#ffffff,stroke:#9333ea,stroke-width:2px,color:#111827
-
-    class A,B,C source
-    class D,E,F,G,H pipe
-    class M1,M2,M3,M4,M5,M6 model
-    class EVAL,SERVE,APP deploy
-```
 
 ---
 
